@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-    helloyolov11.py
+    helloyolo11.py
     Simple predict run for YOLOv11 model
     2024-10-09 0.1 armw Initial DRAFT
 
