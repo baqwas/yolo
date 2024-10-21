@@ -1,0 +1,4 @@
+PROJECT_NAME        = YOLO11 Tests
+OUTPUT_DIRECTORY    = docs
+INPUT               = helloyolo11.py
+FILE_PATTERNS       = *.py
