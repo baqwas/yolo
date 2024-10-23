@@ -33,6 +33,8 @@ Usage:
 image_predict <image filename> -m <YOLO11 model suffix character>
 
 @sa https://docs.ultralytics.com/modes/predict/#why-use-ultralytics-yolo-for-inference
+@sa https://docs.voxel51.com/integrations/ultralytics.html
+@sa https://github.com/amikelive/coco-labels/blob/master/coco-labels-2014_2017.txt
 """
 import argparse
 import os
@@ -46,24 +48,84 @@ def image_predict(args):
     :return: True if processing completed successfully
     """
 
-    folder = args.input_folder                  # command line parameter processing
+    def filenames(folder_path):
+        """
+        Return a list of all files in a folder
 
-    model_name = "yolo11" + args.model + ".pt"  # if -m | --model is unused on command line then args.model="n"
-    model = YOLO(model_name)                    # using a Ultralytics pre-trained model for YOLO11
+        :param: folder_path the path to the files
 
-    results = model([folder])                   # perform detection and prediction
+        :return: list of all files in folder_path
+        """
+        file_list = []
+        for root, dirs, files in os.walk(folder_path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                file_list.append(file_path)
+        return file_list
 
-    for result in results:                      # Process results list
-        boxes = result.boxes                    # Boxes object for bounding box outputs
-        masks = result.masks                    # Masks object for segmentation masks outputs
-        keypoints = result.keypoints            # Keypoints object for pose outputs
-        probs = result.probs                    # Probs object for classification outputs
-        obb = result.obb                        # Oriented boxes object for OBB outputs
-        result.show()                           # display to screen
-        name_only = model_name.find(".")        # remove the ".pt" suffix from model name
-        savefile = (os.path.splitext(os.path.basename(folder))[0] + "_" +
-                    model_name[:name_only] + ".jpg")
-        result.save(filename=savefile)          # save to disk
+    def deconstruct_filename(image_filename):
+        """Deconstructs a fully qualified filename into its components.
+
+        Args:
+            image_filename (str): The fully qualified filename to deconstruct.
+
+        Returns:
+            tuple: A tuple containing the following components:
+                - directory: The directory path.
+                - basename: The base filename without the extension.
+                - extension: The file extension.
+        """
+
+        folder_path, file_with_extension = os.path.split(image_filename)
+        file_name, file_extension = os.path.splitext(file_with_extension)
+
+        return folder_path, file_name, file_extension
+
+    input_files = filenames(args.input_folder)  # command line parameter processing
+    file_dir, _, _ = deconstruct_filename(input_files[0])
+
+    result_folder = None
+    try:
+        os.chmod(file_dir, 0o755)          # grant permission to create sub-folder
+        result_folder = f"{file_dir}/result"    # synthesize the sub-folder name
+        if not os.path.exists(result_folder):
+            os.makedirs(result_folder, mode=0o755, exist_ok=True)
+    except OSError as e:
+        print(f"Could not create the results sub-folder {result_folder}: error: {e}")
+
+    yolo_models = ["yolo11n", "yolo11s", "yolo11m", "yolo11l", "yolo11x"]  # available models
+
+    for selection in yolo_models:
+        model_name = f"{selection}.pt"          # if -m | --model is unused on command line then args.model="n"
+        model = YOLO(model_name)                # using an Ultralytics pre-trained model for YOLO11
+
+        results = model(input_files)            # perform detection and prediction
+        for result in results:                  # Process results list
+            boxes = result.boxes                # object containing the detection bounding boxes
+            """
+                boxes.id  2: 384x640 2 persons, 8 birds, 321.2ms
+                boxes.cls
+                boxex.conf
+            """
+            # print(boxes.id)                   # displayed as None
+            print(boxes.cls)                    # class labels for each box, see coco-labels-2014_2017.txt
+            print(boxes.conf)                   # confidence scores for each box
+            masks = result.masks                # object containing the detection masks
+            keypoints = result.keypoints        # object containing detected keypoints for each object
+            probs = result.probs                # object containing probabilities of each class for classification task
+            obb = result.obb                    # object containing oriented bounding boxes
+            # result.show()                       # show annotated results to screen
+            path = result.path                  # path to image file
+            name_only = model_name.find(".")    # remove the ".pt" suffix from model name
+            file_dir, base, _ = deconstruct_filename(path)
+
+            file_prefix = file_dir + "/result/" + base + "_" + model_name[:name_only]
+
+            savefile = file_prefix + ".jpg"
+            # result.save(filename=savefile)      # Save annotated results to file
+
+            savetext = file_prefix + ".txt"
+            # result.save_txt(filename=savetext)
 
     return True
 
@@ -74,7 +136,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(                        # only one input image file, please
         "input_folder",
-        type=str, default="../images/royalswans1.jpg",
+        type=str, default="/home/chowkidar/Pictures/test/input/birds/royalswan",
         help="folder for images for detection and prediction"
     )
     parser.add_argument(
