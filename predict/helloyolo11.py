@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-'''
+"""
     helloyolo11.py
     Simple predict run for YOLOv11 model
     2024-10-09 0.1 armw Initial DRAFT
@@ -16,7 +16,7 @@
 
     Reference
     https://docs.ultralytics.com/tasks/detect/#predict
-'''
+"""
 from ultralytics import YOLO
 
 model = YOLO("yolo11n.pt")  # the nano model by Ultralytics
