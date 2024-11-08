@@ -30,6 +30,9 @@ SOFTWARE.
 Usage:
 basic_predict.py
 
+result.names: {0: 'person', ... 79: 'toothbrush'}
+result.boxes.cls: [label id1, ... label idn]
+
 @sa https://docs.ultralytics.com/modes/predict/#why-use-ultralytics-yolo-for-inference
 @sa https://docs.voxel51.com/integrations/ultralytics.html
 @sa https://github.com/amikelive/coco-labels/blob/master/coco-labels-2014_2017.txt
@@ -37,6 +40,7 @@ basic_predict.py
 Adapted from: https://docs.ultralytics.com/tasks/detect/#predict
 """
 import os
+
 from ultralytics import YOLO
 
 model_name = "yolo11n"      # pretrained Ultralytics model for YOLO11, nano, COCO dataset
@@ -44,18 +48,18 @@ model = YOLO(f"{model_name}.pt")    # the nano model by Ultralytics
 image_name = "https://ultralytics.com/images/bus.jpg"   # input source for inference
 results = model(f"{image_name}")    # using a parameter driven value for input source
 
-# Process results list
+                            # Process results list
 for result in results:
-    boxes = result.boxes  # Boxes object for bounding box outputs
-    masks = result.masks  # Masks object for segmentation masks outputs
+    boxes = result.boxes    # Boxes object for bounding box outputs
+    masks = result.masks    # Masks object for segmentation masks outputs
     keypoints = result.keypoints  # Keypoints object for pose outputs
-    probs = result.probs  # Probs object for classification outputs
-    obb = result.obb  # Oriented boxes object for OBB outputs
-    result.show()  # display to screen
-    """
-    names: {0: 'person', ... 79: 'toothbrush'}
-    """
-    result_file, _ = os.path.splitext(os.path.basename(result.path))
-    result_file = result_file + "_" + model_name + ".jpg"
+    probs = result.probs    # Probs object for classification outputs
+    obb = result.obb        # Oriented boxes object for OBB outputs
 
+    result.show()           # display to screen
+    result_file, _ = os.path.splitext(os.path.basename(result.path))  # obtain the filepath
+    result_file = result_file + "_" + model_name + ".jpg"  # synthesize the filename
     result.save(filename=result_file)  # save to disk
+    for label in result.boxes.cls:
+        if result.names[int(label)] == "person":  #
+            print("Who goes there?")

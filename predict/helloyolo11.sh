@@ -12,8 +12,9 @@
 # mode is mandatory from (train, val, predict, export, track, benchmark)
 # args is optional expressed as key=value pairs
 #
-mode=detect # object detection
-task=predict # inference
+echo "Running $0"
+task=detect # choose from {detect, segment, classify, pose, obb}
+mode=predict # choose from {train, val, predict, export, track, benchmark}
 models=("n" "s" "m" "l" "x") # nano, small, medium, large & experimental
 image="https://ultralytics.com/images/bus.jpg" # benchmark Ultralytics image
 for str in "${models[@]}"; do # iterate over all models
@@ -21,3 +22,4 @@ for str in "${models[@]}"; do # iterate over all models
   echo "${mode} ${task} ${model} ${image}"
   yolo ${mode} ${task} model=${model} source=${image} # invoke CLI
 done
+echo "All done!"
