@@ -6,10 +6,9 @@
 @date 2024-10-20
 @author armw
 
-
 @brief This script runs YOLO11 operations to detect and predict a list of images in specified folder.
 
-Copyright (c) 2023 ParkCircus Productions; All Rights Reserved.
+Copyright (C) 2024 ParkCircus Productions; All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
