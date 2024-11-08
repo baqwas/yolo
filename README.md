@@ -5,7 +5,7 @@ This repository will use guidance from Ultralytics to evaluate the computer visi
 
 | Model | Filename | Task          | Inference | Validation | Training | Export |
 |-------|----------|---------------|-----------|------------|----------|--------|
-| YOLO11 | yolo11n.pt | [Detection](https://docs.ultralytics.com/tasks/detect/) | :white_check_mark: | :u2713: | \u2713 | \u2713 |
+| YOLO11 | yolo11n.pt | [Detection](https://docs.ultralytics.com/tasks/detect/) | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 ## Detection
 The YOLO11 pretrained Detect models used the COCO dataset.
