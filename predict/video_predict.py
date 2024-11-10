@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-@brief basic_predict.py run a simple Predict Mode script with a pretrained YOLO11 model
+@brief video_predict.py run a simple Predict Mode script with a pretrained YOLO11 model
 @version 0.1
 @date 2024-10-20
 @author armw
@@ -28,7 +28,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 Usage:
-basic_predict.py
+video_predict.py
 
 result.names: {0: 'person', ... 79: 'toothbrush'}
 result.boxes.cls: [label id1, ... label idn]
@@ -44,29 +44,29 @@ https://ultralytics.com/images/bus.jpg
 Adapted from: https://docs.ultralytics.com/tasks/detect/#predict
 """
 import os
-
+import cv2
 from ultralytics import YOLO
 
-model_name = "yolo11n"      # pretrained Ultralytics model for YOLO11, nano, COCO dataset
-model = YOLO(f"{model_name}.pt")    # the nano model by Ultralytics
-image_name = "/home/reza/PycharmProjects/yolo11/images/parrots.jpg"   # input source for inference
-if not os.path.isfile(image_name):
-    print(f"Unable to read image file {image_name}")
+model_name = "yolo11n"                              # pretrained Ultralytics model for YOLO11, nano, COCO dataset
+model = YOLO(f"{model_name}.pt")                    # the nano model by Ultralytics
+source_video = "/home/reza/PycharmProjects/yolo11/videos/elephant_train.mov"   # input source for inference
+if not os.path.isfile(source_video):                # does the source video exist?
+    print(f"Unable to read image file {source_video}")
     exit(-1)
-results = model(f"{image_name}")    # using a parameter driven value for input source
 
-                            # Process results list
-for result in results:
-    boxes = result.boxes    # Boxes object for bounding box outputs
-    masks = result.masks    # Masks object for segmentation masks outputs
-    keypoints = result.keypoints  # Keypoints object for pose outputs
-    probs = result.probs    # Probs object for classification outputs
-    obb = result.obb        # Oriented boxes object for OBB outputs
+myCapture = cv2.VideoCapture(source_video)          # leverage OpenCV to access the source video
+while myCapture.isOpened():                         # process if frames exist
+    success, frame_current = myCapture.read()       # frame-by-frame processing
+    if success:                                     # frame was read
+        results = model(frame_current)              # run inference on current frame
+        frame_annotated = results[0].plot()         # prepare frame for display
+        cv2.imshow(source_video, frame_annotated)   # On Screen!
 
-    result.show()           # display to screen
-    result_file, _ = os.path.splitext(os.path.basename(result.path))  # obtain the filepath
-    result_file = result_file + "_" + model_name + ".jpg"  # synthesize the filename
-    result.save(filename=result_file)  # save to disk
-    for label in result.boxes.cls:
-        if result.names[int(label)] == "person":  #
-            print("Who goes there?")    # example to substitute print statement with an alert function
+        if cv2.waitKey(1) & 0xFF == ord('q'):       # wait for a ms for the letter 'q'
+            break
+    else:
+        break
+
+myCapture.release()                                 # release video capture resources
+cv2.destroyAllWindows()                             # Good Housekeeping
+print("All done!")
