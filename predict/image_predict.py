@@ -104,7 +104,7 @@ def image_predict(args):
             """
                 boxes.id  2: 384x640 2 persons, 8 birds, 321.2ms
                 boxes.cls
-                boxex.conf
+                boxes.conf
             """
             # print(boxes.id)                   # displayed as None
             print(boxes.cls)                    # class labels for each box, see coco-labels-2014_2017.txt
