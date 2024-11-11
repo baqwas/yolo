@@ -31,9 +31,33 @@ SOFTWARE.
 Usage:
 image_predict <image filename> -m <YOLO11 model suffix character>
 
+Count objects:
+    results = model(img)
+    num_objects = len(results.xyxyn)
+    print(f"Number of objects detected: {num_objects}")
+
+    # To count specific objects, iterate through the results and check class labels:
+    class_to_count = 'person'  # Replace with the desired class
+    count = 0
+    for *xyxy, conf, cls in results.xyxyn:
+        if int(cls) == model.names.index(class_to_count):
+            count += 1
+
+print(f"Number of {class_to_count} objects: {count}")
+
+
 @sa https://docs.ultralytics.com/modes/predict/#why-use-ultralytics-yolo-for-inference
 @sa https://docs.voxel51.com/integrations/ultralytics.html
 @sa https://github.com/amikelive/coco-labels/blob/master/coco-labels-2014_2017.txt
+@software{yolo11_ultralytics,
+  author = {Glenn Jocher and Jing Qiu},
+  title = {Ultralytics YOLO11},
+  version = {11.0.0},
+  year = {2024},
+  url = {https://github.com/ultralytics/ultralytics},
+  orcid = {0000-0001-5950-6979, 0000-0002-7603-6750, 0000-0003-3783-7069},
+  license = {AGPL-3.0}
+}
 """
 import argparse
 import os

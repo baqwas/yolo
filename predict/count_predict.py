@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-@brief thread_predict.py run a thread-safe inference  with a pretrained YOLO11 model
+@brief count_predict.py count objects traversing a box or a line
 @version 0.1
 @date 2024-10-20
 @author armw
 
-@brief This script will infer objects in the input source using YOLO11
+@brief This script will classify objects in the input source using YOLO11
 
 Copyright (C) 2024 ParkCircus Productions; All Rights Reserved.
 
@@ -28,10 +28,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 Usage:
-thread_predict.py
+count_predict.py
 
-script adapted from
-@sa https://docs.ultralytics.com/modes/predict/#thread-safe-inference
+Probs:
+Attributes:
+    data, orig_shape, top1, top5, top1conf, top5conf
+Methods:
+    cpu, numpy, cuda, to
+Adapted from:
+https://docs.ultralytics.com/tasks/obb/
 
 @sa https://docs.ultralytics.com/modes/predict/#why-use-ultralytics-yolo-for-inference
 @sa https://docs.voxel51.com/integrations/ultralytics.html
@@ -49,21 +54,35 @@ Adapted from: https://docs.ultralytics.com/tasks/detect/#predict
 }
 """
 import os
-from threading import Thread
 from ultralytics import YOLO
 
-def thread_safe_predict(image_path): #  helper function
-    """
-    Performs thread-safe inference on an image using a locally instantiated YOLO model
-    :param image_path:  image for inference
-    :return:
-    """
-    local_model = YOLO("yolo11n.pt")
-    results = local_model.predict(image_path)
+model_name = "yolo11n-obb"      # pretrained Ultralytics model for YOLO11, nano, COCO dataset
+model = YOLO(f"{model_name}.pt")    # the nano model by Ultralytics
+image_name = "/home/reza/PycharmProjects/yolo11/images/drivethru.jpg"   # input source for inference
+if not os.path.isfile(image_name):
+    print(f"Unable to read image file {image_name}")
+    exit(-1)
+results = model(f"{image_name}")    # using a parameter driven value for input source
 
-    for result in results:
-        result.show()  # display to screen
+                            # Process results list
+for result in results:
+    boxes = result.boxes    # Boxes object for bounding box outputs
 
-Thread(target=thread_safe_predict, args=("/home/reza/PycharmProjects/yolo11/images/macaws.jpg",)).start()
-Thread(target=thread_safe_predict, args=("/home/reza/PycharmProjects/yolo11/images/birds.jpg",)).start()
+    masks = result.masks    # Masks object for segmentation masks outputs
+    keypoints = result.keypoints  # Keypoints object for pose outputs
+    probs = result.probs    # Probs object for classification outputs
+    obb = result.obb        # Oriented boxes object for OBB outputs
+
+    result.show()           # display to screen
+    result_file, _ = os.path.splitext(os.path.basename(result.path))  # obtain the filepath
+    result_file = result_file + "_" + model_name + ".jpg"  # synthesize the filename
+    result.save(filename=result_file)  # save to disk
+
+    for bound in obb:    # iterate through all boxes objects in the results object
+        print(f"{result.names[int(bound.cls)]} {bound.conf[0]:.2f}")
+
+
+
+
+
 
