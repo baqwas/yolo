@@ -45,7 +45,7 @@ from ultralytics import YOLO
 
 model_name = "yolo11n"      # pretrained Ultralytics model for YOLO11, nano, COCO dataset
 model = YOLO(f"{model_name}.pt")    # the nano model by Ultralytics
-images = ["/home/reza/PycharmProjects/yolo11/images/parrots.jpg",
+images = ["/home/reza/PycharmProjects/yolo11/images/macaws.jpg",
     "/home/reza/PycharmProjects/yolo11/images/birds.jpg"] # input source for inference
 for image_name in images:
     if not os.path.isfile(image_name):

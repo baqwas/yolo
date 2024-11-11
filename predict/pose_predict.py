@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-@brief seg_predict.py run a simple Predict Mode script with a pretrained YOLO11 model
+@brief pose_predict.py run a simple pose estimation script with a pretrained YOLO11 model
 @version 0.1
 @date 2024-10-20
 @author armw
 
-@brief This script will infer objects in the input source using YOLO11
+@brief This script will classify objects in the input source using YOLO11
 
 Copyright (C) 2024 ParkCircus Productions; All Rights Reserved.
 
@@ -28,10 +28,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 Usage:
-seg_predict.py
+pose_predict.py
 
+Probs:
+Attributes:
+    data, orig_shape, top1, top5, top1conf, top5conf
+Methods:
+    cpu, numpy, cuda, to
 Adapted from:
-https://docs.ultralytics.com/tasks/segment/#val
+https://docs.ultralytics.com/tasks/pose/
 
 @sa https://docs.ultralytics.com/modes/predict/#why-use-ultralytics-yolo-for-inference
 @sa https://docs.voxel51.com/integrations/ultralytics.html
@@ -42,9 +47,9 @@ Adapted from: https://docs.ultralytics.com/tasks/detect/#predict
 import os
 from ultralytics import YOLO
 
-model_name = "yolo11n-seg"      # pretrained Ultralytics model for YOLO11, nano, COCO dataset
+model_name = "yolo11n-pose"      # pretrained Ultralytics model for YOLO11, nano, COCO dataset
 model = YOLO(f"{model_name}.pt")    # the nano model by Ultralytics
-image_name = "/home/reza/PycharmProjects/yolo11/images/macaws.jpg"   # input source for inference
+image_name = "/home/reza/PycharmProjects/yolo11/images/judo.jpg"   # input source for inference
 if not os.path.isfile(image_name):
     print(f"Unable to read image file {image_name}")
     exit(-1)
@@ -63,5 +68,11 @@ for result in results:
     result_file, _ = os.path.splitext(os.path.basename(result.path))  # obtain the filepath
     result_file = result_file + "_" + model_name + ".jpg"  # synthesize the filename
     result.save(filename=result_file)  # save to disk
+
+    for box in result.boxes:    # iterate through all boxes objects in the results object
+        for label in box.cls:   # demonstration to check if a specific label was detected
+            print(f"{result.names[int(label)]} {box.conf[0]:.2f}")
+
+
 
 

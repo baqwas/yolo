@@ -55,6 +55,6 @@ def thread_safe_predict(image_path): #  helper function
     for result in results:
         result.show()  # display to screen
 
-Thread(target=thread_safe_predict, args=("/home/reza/PycharmProjects/yolo11/images/parrots.jpg",)).start()
+Thread(target=thread_safe_predict, args=("/home/reza/PycharmProjects/yolo11/images/macaws.jpg",)).start()
 Thread(target=thread_safe_predict, args=("/home/reza/PycharmProjects/yolo11/images/birds.jpg",)).start()
 
