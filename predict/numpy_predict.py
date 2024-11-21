@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-@brief cls_predict.py run a simple Predict Mode script with a pretrained YOLO11 model
+@brief opencv_predict.py run a simple Predict Mode script with a pretrained YOLO11 model
 @version 0.1
 @date 2024-10-20
 @author armw
 
-@brief This script will classify objects in the input source using YOLO11
+@brief Run inference on an image represented as a numpy array
 
 Copyright (C) 2024 ParkCircus Productions; All Rights Reserved.
 
@@ -28,15 +28,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 Usage:
-cls_predict.py
-
-Probs:
-Attributes:
-    data, orig_shape, top1, top5, top1conf, top5conf
-Methods:
-    cpu, numpy, cuda, to
-Adapted from:
-https://docs.ultralytics.com/tasks/segment/#val
+numpy_predict.py
 
 @sa https://docs.ultralytics.com/modes/predict/#why-use-ultralytics-yolo-for-inference
 @sa https://docs.voxel51.com/integrations/ultralytics.html
@@ -53,19 +45,32 @@ Adapted from: https://docs.ultralytics.com/tasks/detect/#predict
   license = {AGPL-3.0}
 }
 """
+import numpy as np
 import os
 from ultralytics import YOLO
 
-model_name = "yolo11n-cls"      # pretrained Ultralytics model for YOLO11, nano, COCO dataset
+model_name = "yolo11n"      # pretrained Ultralytics model for YOLO11, nano, COCO dataset
 model = YOLO(f"{model_name}.pt")    # the nano model by Ultralytics
-image_name = "../images/royalswans/swan04.jpg"   # input source for inference
-if not os.path.isfile(image_name):
-    print(f"Unable to read image file {image_name}")
-    exit(-1)
-results = model(f"{image_name}")    # using a parameter driven value for input source
+# Create a random numpy array of HWC shape (640, 640, 3) with values in range [0, 255] and type uint8
+image_name = np.random.randint(low=0, high=255, size=(640, 640, 3), dtype="uint8")
+results = model(image_name, stream=True)    # using a parameter driven value for input source
 
                             # Process results list
 for result in results:
+    """
+    boxes:
+        cls: tensor([14.])
+        conf: tensor([0.2882])
+        data: tensor([[6.2852e+02, 2.1980e+03, 1.8514e+03, 4.4705e+03, 2.8822e-01, 1.4000e+01]])
+        id: None
+        is_track: False
+        orig_shape: (5376, 3024)
+        shape: torch.Size([1, 6])
+        xywh: tensor([[1239.9497, 3334.2563, 1222.8691, 2272.5525]])
+        xywhn: tensor([[0.4100, 0.6202, 0.4044, 0.4227]])
+        xyxy: tensor([[ 628.5152, 2197.9802, 1851.3843, 4470.5327]])
+        xyxyn: tensor([[0.2078, 0.4089, 0.6122, 0.8316]])
+    """
     boxes = result.boxes    # Boxes object for bounding box outputs
 
     masks = result.masks    # Masks object for segmentation masks outputs
@@ -77,9 +82,8 @@ for result in results:
     result_file, _ = os.path.splitext(os.path.basename(result.path))  # obtain the filepath
     result_file = result_file + "_" + model_name + ".jpg"  # synthesize the filename
     result.save(filename=result_file)  # save to disk
-
-    for index, top in enumerate(probs.top5):
-        print(f"{result.names[top]} {probs.top5conf[index]:.2f}")
-
-
-
+    for box in result.boxes:    # iterate through all boxes objects in the results object
+        for label in box.cls:   # demonstration to check if a specific label was detected
+            print(f"{result.names[int(label)]} {box.conf[0]:.2f}")
+            if result.names[int(label)] == "person":  # interrogate persons
+                print("Halt! Wer da?")    # example to substitute print statement with an alert function
