@@ -56,7 +56,7 @@ model = YOLO(f"{model_name}.pt")    # the nano model by Ultralytics
 
 # Single stream with batch-size 1 inference
 source_stream = "rtsp://raspbari14.parkcircus.org/media.mp4"  # RTSP, RTMP, TCP, or IP streaming address
-
+source_stream = "https://www.youtube.com/watch?v=jNQXAC9IVRw"
 results = model(source_stream, stream=True)    # using a parameter driven value for input source
 
                             # Process results list

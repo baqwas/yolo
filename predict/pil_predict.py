@@ -51,27 +51,14 @@ from ultralytics import YOLO
 
 model_name = "yolo11n"      # pretrained Ultralytics model for YOLO11, nano, COCO dataset
 model = YOLO(f"{model_name}.pt")    # the nano model by Ultralytics
-image_file = "../images/tongliboats.jpg"    # image file to be read
+image_file = "../images/misc/tongliboats.jpg"    # image file to be read
 assert os.path.isfile(image_file), f"{image_file} not found"
 image_name = Image.open(image_file) # using PIL function to read image
 results = model(image_name, stream=True)    # using a parameter driven value for input source
 
                             # Process results list
 for result in results:
-    """
-    boxes:
-        cls: tensor([14.])
-        conf: tensor([0.2882])
-        data: tensor([[6.2852e+02, 2.1980e+03, 1.8514e+03, 4.4705e+03, 2.8822e-01, 1.4000e+01]])
-        id: None
-        is_track: False
-        orig_shape: (5376, 3024)
-        shape: torch.Size([1, 6])
-        xywh: tensor([[1239.9497, 3334.2563, 1222.8691, 2272.5525]])
-        xywhn: tensor([[0.4100, 0.6202, 0.4044, 0.4227]])
-        xyxy: tensor([[ 628.5152, 2197.9802, 1851.3843, 4470.5327]])
-        xyxyn: tensor([[0.2078, 0.4089, 0.6122, 0.8316]])
-    """
+
     boxes = result.boxes    # Boxes object for bounding box outputs
 
     masks = result.masks    # Masks object for segmentation masks outputs

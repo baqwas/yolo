@@ -159,7 +159,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(                        # only one input image file, please
         "input_folder",
-        type=str, default="/home/chowkidar/Pictures/test/input/birds/royalswan",
+        type=str, default="../images/royalswans",
         help="folder for images for detection and prediction"
     )
     parser.add_argument(

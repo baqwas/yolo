@@ -53,7 +53,7 @@ from ultralytics import YOLO
 
 model_name = "yolo11x-seg"      # pretrained Ultralytics model for YOLO11, nano, COCO dataset
 model = YOLO(f"{model_name}.pt")    # the nano model by Ultralytics
-image_name = "/home/reza/PycharmProjects/yolo11/images/temple.jpg"   # input source for inference
+image_name = "../images/misc/temple.jpg"   # input source for inference
 if not os.path.isfile(image_name):
     print(f"Unable to read image file {image_name}")
     exit(-1)

@@ -71,7 +71,7 @@ classes2count = [28]                                # 28=suitcase, no 0=person &
 
 model_name = "yolo11n.pt"                           # pretrained Ultralytics model for YOLO11, nano, COCO dataset
 model = YOLO(f"{model_name}")                       # the nano model by Ultralytics
-video_source = "/home/reza/PycharmProjects/yolo11/videos/luggage2.mp4"  # input source for inference
+video_source = "../videos/luggage/luggage1.mp4"  # input source for inference
 if not os.path.isfile(video_source):                # does the source video exist?
     print(f"Unable to read source video at {video_source}")
     exit(-1)

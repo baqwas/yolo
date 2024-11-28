@@ -51,7 +51,7 @@ from ultralytics import YOLO
 
 model_name = "yolo11n"      # pretrained Ultralytics model for YOLO11, nano, COCO dataset
 model = YOLO(f"{model_name}.pt")    # the nano model by Ultralytics
-image_file = "../images/tongliboats.jpg"    # image file to be read
+image_file = "../images/misc/tongliboats.jpg"    # image file to be read
 assert os.path.isfile(image_file), f"{image_file} not found"
 image_name = cv2.imread(image_file) # using PIL function to read image
 results = model(image_name, stream=True)    # using a parameter driven value for input source
