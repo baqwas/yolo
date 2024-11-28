@@ -55,18 +55,18 @@ Adapted from: https://docs.ultralytics.com/tasks/detect/#predict
 import os
 from ultralytics import YOLO
 
-model_name = "yolo11l"      # pretrained Ultralytics model for YOLO11, nano, COCO dataset
+model_name = "yolo11x"      # pretrained Ultralytics model for YOLO11, nano, COCO dataset
 model = YOLO(f"{model_name}.pt")    # the nano model by Ultralytics
-image_name = "../images/tongliboats.jpg"   # input source for inference
+image_name = "../images/misc/birds.jpg"   # input source for inference
 if not os.path.isfile(image_name):
     print(f"Unable to read image file {image_name}")
     exit(-1)
-results = model(f"{image_name}")    # using a parameter driven value for input source
+results = model(f"{image_name}", stream=True)    # using a parameter driven value for input source
 
                             # Process results list
 for result in results:
     """
-    boxes:
+    boxes: # sample results where applicable
         cls: tensor([14.])
         conf: tensor([0.2882])
         data: tensor([[6.2852e+02, 2.1980e+03, 1.8514e+03, 4.4705e+03, 2.8822e-01, 1.4000e+01]])
