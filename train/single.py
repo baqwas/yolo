@@ -63,13 +63,16 @@ Adapted from: https://docs.ultralytics.com/tasks/detect/#predict
   orcid = {0000-0001-5950-6979, 0000-0002-7603-6750, 0000-0003-3783-7069},
   license = {AGPL-3.0}
 }
+
+model = YOLO("yolo11n.pt")              # load a pretrained model (recommended for training)
+model = YOLO("yolo11n.yaml").load("yolo11n.pt")  # build from YAML and transfer weights
+
 """
 from ultralytics import YOLO
 
                                         # Load a model
 model = YOLO("yolo11n.yaml")            # build a new model from YAML
-# model = YOLO("yolo11n.pt")  # load a pretrained model (recommended for training)
-# model = YOLO("yolo11n.yaml").load("yolo11n.pt")  # build from YAML and transfer weights
+
 
                                         # Train the model
 results = model.train(data="coco8.yaml", epochs=100, imgsz=640)
