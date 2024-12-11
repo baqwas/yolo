@@ -65,7 +65,8 @@ from ultralytics import solutions
 frame_count = 0
 model_name = "yolo11n.pt"                           # pretrained Ultralytics model for YOLO11, nano, COCO dataset
 
-video_source = "../videos/traffic/lavon3.mp4"  # input source for distance calculation between user selected bounding boxes
+video_source = "../videos/elephant/elephant_train.mov"  # input source for distance calculation between user selected bounding boxes
+
 if not os.path.isfile(video_source):                # does the source video exist?
     print(f"Unable to read source video at {video_source}")
     exit(-1)
