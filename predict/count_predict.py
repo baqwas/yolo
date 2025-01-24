@@ -56,9 +56,9 @@ Adapted from: https://docs.ultralytics.com/tasks/detect/#predict
 import os
 from ultralytics import YOLO
 
-model_name = "yolo11l-obb"      # pretrained Ultralytics model for YOLO11, nano, COCO dataset
+model_name = "yolo11l"      # pretrained Ultralytics model for YOLO11, nano, COCO dataset
 model = YOLO(f"{model_name}.pt")    # the nano model by Ultralytics
-image_name = "../images/misc/marina.jpg"   # input source for inference
+image_name = "../images/misc/drivethru.jpg"   # input source for inference
 if not os.path.isfile(image_name):
     print(f"Unable to read image file {image_name}")
     exit(-1)
