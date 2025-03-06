@@ -2,12 +2,12 @@
 """
 @brief count_region.py count objects in user defined regions
 @version 0.1
-@date 2024-10-20
+@date 2025-01-20
 @author armw
 
 @brief This script will infer objects in the input source using YOLO11
 
-Copyright (C) 2024 ParkCircus Productions; All Rights Reserved.
+Copyright (C) 2025 ParkCircus Productions; All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -39,8 +39,8 @@ Processing
         Output detections
 
 Notes
-for luggage demonstration videos:
-COCO labels: {13: "bench", 28: "suitcase"}
+for train demonstration videos:
+COCO labels: {3: "car", 7: "train", 8: "truck"}
 
 @sa https://docs.ultralytics.com/modes/predict/#why-use-ultralytics-yolo-for-inference
 @sa https://docs.voxel51.com/integrations/ultralytics.html
@@ -63,15 +63,17 @@ import cv2
 from ultralytics import YOLO, solutions
 
                                                     # Define region points; will need tweaking!
-region_points = [(535, 285), (1130, 285), (1130, 370), (535, 370)] # for luggage1.mp4
+# region_points = [(535, 285), (1130, 285), (1130, 370), (535, 370)] # for luggage1.mp4
 # region_points = [(540, 285), (1150, 285), (1150, 370), (540, 370)] # for luggage2.mp4
 # region_points = [(540, 190), (1070, 190), (1070, 340), (540, 340)] # for luggage3.mp4
+region_points = [(100, 370), (800, 370), (800, 555), (100, 555)] # for train_sh78_02.mp4
 frame_count = 0
-classes2count = [28]                                # 28=suitcase, no 0=person & 13=bench, please
+# classes2count = [28]                                # 28=suitcase, no 0=person & 13=bench, please
+classes2count = [7]                                 # 7=train
 
 model_name = "yolo11n.pt"                           # pretrained Ultralytics model for YOLO11, nano, COCO dataset
 model = YOLO(f"{model_name}")                       # the nano model by Ultralytics
-video_source = "../videos/luggage/luggage1.mp4"  # input source for inference
+video_source = "../videos/traffic/train_sh78_02.mp4"  # input source for inference
 if not os.path.isfile(video_source):                # does the source video exist?
     print(f"Unable to read source video at {video_source}")
     exit(-1)
@@ -101,7 +103,7 @@ while myCapture.isOpened():                         # process if frames exist
         frame_count += 1                            # keep track of the number of frames read
         tracks = model.track(frame_current,
                              persist=True,          # persist tracker if it exists already
-                             show=False)
+                             show=True)
         frame_current = counter.count(frame_current)    # process data (frames | object tracks) & update object counts
         video_writer.write(frame_current)           # write the next frame to the specified video file; returns true if successful
 
