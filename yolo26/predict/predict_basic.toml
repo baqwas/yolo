@@ -1,0 +1,4 @@
+model = "yolo26n.pt"
+image_directory = "/home/reza/Pictures/VLMtest"
+file_extension = "*.jpg"
+output_directory = "./output"

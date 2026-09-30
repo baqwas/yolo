@@ -1,0 +1,5 @@
+[anpr]
+model_path = "number-plate-yolo26s.pt"
+source = "acar-3.mp4" # Pass integer 0 for webcam (e.g., source = 0) or string for video path/RTSP stream
+output_path = "anpr_output.mp4"
+display = true
